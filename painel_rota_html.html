@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel ROTA - RP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .card {
+      background: #1a1a1a;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      background: #0055ff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003fcc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Painel ROTA - Sistema de Registro</h1>
+
+  <div class="card">
+    <h2>Bater Ponto</h2>
+    <input type="text" id="nomePonto" placeholder="Seu nome" />
+    <button onclick="enviarPonto()">Registrar Ponto</button>
+  </div>
+
+  <div class="card">
+    <h2>Registrar Prisão</h2>
+    <input type="text" id="nomeOficialPrisao" placeholder="Seu nome" />
+    <input type="text" id="suspeitoPrisao" placeholder="Nome do suspeito" />
+    <textarea id="motivoPrisao" placeholder="Motivo da prisão"></textarea>
+    <button onclick="registrarPrisao()">Registrar Prisão</button>
+  </div>
+
+  <div class="card">
+    <h2>Registrar Ação</h2>
+    <input type="text" id="nomeOficialAcao" placeholder="Seu nome" />
+    <textarea id="descricaoAcao" placeholder="Descreva a ação"></textarea>
+    <button onclick="registrarAcao()">Registrar Ação</button>
+  </div>
+
+  <div class="card">
+    <h2>Verificar Aptidão à Promoção</h2>
+    <input type="text" id="nomeCheck" placeholder="Seu nome" />
+    <button onclick="verificarPromocao()">Verificar</button>
+    <p id="resultadoPromocao"></p>
+  </div>
+
+  <script>
+    const ENDPOINT_PONTO = "https://sheetdb.io/api/v1/7qsxfh3s12abq";
+    const ENDPOINT_PRISOES = "https://sheetdb.io/api/v1/whqq54vr8vtz6";
+    const ENDPOINT_ACOES = "COLOQUE_A_URL_DA_ABA_ACOES_AQUI";
+
+    function enviarPonto() {
+      const nome = document.getElementById("nomePonto").value;
+      fetch(ENDPOINT_PONTO, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: {
+            data: new Date().toISOString(),
+            oficial: nome
+          }
+        })
+      });
+      alert("Ponto registrado!");
+    }
+
+    function registrarPrisao() {
+      const nome = document.getElementById("nomeOficialPrisao").value;
+      const suspeito = document.getElementById("suspeitoPrisao").value;
+      const motivo = document.getElementById("motivoPrisao").value;
+      fetch(ENDPOINT_PRISOES, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: {
+            data: new Date().toISOString(),
+            oficial: nome,
+            suspeito: suspeito,
+            motivo: motivo
+          }
+        })
+      });
+      alert("Prisão registrada!");
+    }
+
+    function registrarAcao() {
+      const nome = document.getElementById("nomeOficialAcao").value;
+      const descricao = document.getElementById("descricaoAcao").value;
+      fetch(ENDPOINT_ACOES, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: {
+            data: new Date().toISOString(),
+            oficial: nome,
+            descricao: descricao
+          }
+        })
+      });
+      alert("Ação registrada!");
+    }
+
+    function verificarPromocao() {
+      const nome = document.getElementById("nomeCheck").value;
+      document.getElementById("resultadoPromocao").innerText =
+        "O cálculo automático de promoção depende da URL da aba 'Ações'.";
+    }
+  </script>
+</body>
+</html>
